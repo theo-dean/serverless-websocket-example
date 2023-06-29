@@ -1,29 +1,51 @@
+service: "tdean-serverless-websockets-example"
+
 provider:
   name: aws
   runtime: nodejs18.x
   region: eu-west-1
-  stage: ${opt:stage,'stage'}
+  stage: test
   timeout: 15
   memorySize: 256
+  profile: sandbox
 
 functions:
   connect:
-    handler: functions/connect.main
+    handler: functions/connect.handler
     events:
       - websocket:
           route: $connect
   disconnect:
-    handler: functions/disconnect.main
+    handler: functions/disconnect.handler
     events:
       - websocket:
           route: $disconnect
+  sendMessage:
+    handler: functions/sendMessage.handler
+    environment:
+      WEBSOCKETS_API_DOMAIN:
+        Fn::Join:
+          - ''
+          - - Ref: WebsocketsApi
+            - .execute-api.
+            - ${self:provider.region}
+            - .amazonaws.com/
+            - ${self:provider.stage}
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::GetAtt:
+              - DataTable
+              - StreamArn
+  # We could batch here!
 
 resources:
   Resources:
     connectionsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: connectionsTable
+        TableName: ConnectionsTable
         AttributeDefinitions:
           - AttributeName: connectionId
             AttributeType: S
@@ -34,7 +56,7 @@ resources:
     dataTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: connectionsTable
+        TableName: DataTable
         AttributeDefinitions:
           - AttributeName: connectionId
             AttributeType: S
@@ -43,3 +65,5 @@ resources:
         KeySchema:
           - AttributeName: connectionId
             KeyType: HASH
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
