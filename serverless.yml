@@ -1,0 +1,45 @@
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  stage: ${opt:stage,'stage'}
+  timeout: 15
+  memorySize: 256
+
+functions:
+  connect:
+    handler: functions/connect.main
+    events:
+      - websocket:
+          route: $connect
+  disconnect:
+    handler: functions/disconnect.main
+    events:
+      - websocket:
+          route: $disconnect
+
+resources:
+  Resources:
+    connectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: connectionsTable
+        AttributeDefinitions:
+          - AttributeName: connectionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: connectionId
+            KeyType: HASH
+
+    dataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: connectionsTable
+        AttributeDefinitions:
+          - AttributeName: connectionId
+            AttributeType: S
+          - AttributeName: data
+            AttributeType: S
+        KeySchema:
+          - AttributeName: connectionId
+            KeyType: HASH
