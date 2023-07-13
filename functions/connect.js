@@ -1,6 +1,6 @@
-import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+const dynamodb = require("@aws-sdk/client-dynamodb");
 
-export const handler = async (event) => {
+module.exports.handler = async (event) => {
     const connectionId = event.requestContext.connectionId;
     const domainName = event.requestContext.domainName;
     const stageName = event.requestContext.stage;
@@ -8,16 +8,20 @@ export const handler = async (event) => {
     console.log('Connection ID: ', connectionId, 'Domain Name: ', domainName, 'Stage Name: ', stageName, 'Query Strings: ', qs)
 
     try {
-        const client = new DynamoDBClient({});
-        await client.send(new PutItemCommand({
+        const client = new dynamodb.DynamoDBClient({region: "eu-west-1"});
+        await client.send(new dynamodb.PutItemCommand({
             TableName: "ConnectionsTable",
             Item: {
-                connectionId
+                "connectionId": {
+                    "S": connectionId
+                }
             }
         }));
     } catch (e) {
         console.error(e);
         return {"statusCode": 500};
     }
-    return {"statusCode": 200};
+    return {"statusCode": 200, body: JSON.stringify({
+        connectionId
+    })}; // Can the client access this data?
 }

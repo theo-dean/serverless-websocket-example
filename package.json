@@ -4,12 +4,13 @@
   "description": "An example Serverless Application using Websockets",
   "main": "index.js",
   "scripts": {
-    "run": "node main.js"
+    "start": "node main.js"
   },
   "author": "TD",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-apigatewaymanagementapi": "^3.362.0",
-    "@aws-sdk/client-dynamodb": "^3.369.0"
+    "@aws-sdk/client-dynamodb": "^3.369.0",
+    "websocket": "^1.0.34"
   }
 }

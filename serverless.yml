@@ -8,6 +8,13 @@ provider:
   timeout: 15
   memorySize: 256
   profile: sandbox
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable
 
 functions:
   connect:
@@ -34,7 +41,7 @@ functions:
     events:
       - stream:
           type: dynamodb
-          arn: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable/stream/2023-07-12T14:51:56.605
+          arn: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable/stream/2023-07-13T12:25:36.711
   # We could batch here!
 
 resources:
@@ -45,9 +52,7 @@ resources:
         TableName: ConnectionsTable
         AttributeDefinitions:
           - AttributeName: connectionId
-            AttributeType: S
-          - AttributeName: products
-            AttributeType: SS    
+            AttributeType: S  
         KeySchema:
           - AttributeName: connectionId
             KeyType: HASH
