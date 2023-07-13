@@ -34,10 +34,7 @@ functions:
     events:
       - stream:
           type: dynamodb
-          arn:
-            Fn::GetAtt:
-              - DataTable
-              - StreamArn
+          arn: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable/stream/2023-07-12T14:51:56.605
   # We could batch here!
 
 resources:
@@ -49,21 +46,11 @@ resources:
         AttributeDefinitions:
           - AttributeName: connectionId
             AttributeType: S
+          - AttributeName: products
+            AttributeType: SS    
         KeySchema:
           - AttributeName: connectionId
             KeyType: HASH
-
-    dataTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: DataTable
-        AttributeDefinitions:
-          - AttributeName: connectionId
-            AttributeType: S
-          - AttributeName: data
-            AttributeType: S
-        KeySchema:
-          - AttributeName: connectionId
-            KeyType: HASH
-        StreamSpecification:
-          StreamViewType: NEW_IMAGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
