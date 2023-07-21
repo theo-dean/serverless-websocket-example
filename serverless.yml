@@ -8,13 +8,16 @@ provider:
   timeout: 15
   memorySize: 256
   profile: sandbox
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable
 
 functions:
   connect:
@@ -41,8 +44,8 @@ functions:
     events:
       - stream:
           type: dynamodb
-          arn: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable/stream/2023-07-13T12:25:36.711
-  # We could batch here!
+          arn: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable/stream/2023-07-18T15:34:09.502
+  # Unfortunately, there is no way to generate this stream ^^^ natively in Serverless. This will create some issues on the initial deployment of this stack.
 
 resources:
   Resources:
