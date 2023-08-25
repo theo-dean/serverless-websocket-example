@@ -17,7 +17,7 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable
+          Resource: arn:aws:dynamodb:eu-west-1:255469446966:table/${self:service}-ConnectionsTable
 
 functions:
   connect:
@@ -44,20 +44,21 @@ functions:
     events:
       - stream:
           type: dynamodb
-          arn: arn:aws:dynamodb:eu-west-1:255469446966:table/ConnectionsTable/stream/2023-07-18T15:34:09.502
+          arn: arn:aws:dynamodb:eu-west-1:255469446966:table/tdean-serverless-websockets-example-ConnectionsTable/stream/2023-07-26T09:17:15.543
   # Unfortunately, there is no way to generate this stream ^^^ natively in Serverless. This will create some issues on the initial deployment of this stack.
 
 resources:
   Resources:
+  #I would recommend creating this table manually, followed by the stream above ^^^
     connectionsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ConnectionsTable
+        TableName: ${self:service}-ConnectionsTable
         AttributeDefinitions:
-          - AttributeName: connectionId
-            AttributeType: S  
+          - AttributeName: requestId
+            AttributeType: S 
         KeySchema:
-          - AttributeName: connectionId
+          - AttributeName: requestId
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1

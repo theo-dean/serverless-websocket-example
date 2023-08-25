@@ -10,20 +10,23 @@ module.exports.handler = async (event) => {
     console.log('Connection ID: ', connectionId, 'Domain Name: ', domainName, 'Stage Name: ', stageName, 'Query Strings: ', qs);
 
     try {
-        //if (!requestId) throw new Error("Invalid RequestId", requestId);
         const requestId = qs["requestId"];
-        console.log("ReqId?", requestId);       
+        if (!requestId) throw new Error("Invalid RequestId", requestId);
+        
         await client.send(new dynamodb.PutItemCommand({
-            TableName: "ConnectionsTable",
+            TableName: "tdean-serverless-websockets-example-ConnectionsTable",
             Item: {
-                "connectionId": {
+                "requestId": {
                     "S": requestId
+                },
+                "connectionId": {
+                    "S": connectionId
                 },
                 "products": {
                     "M": {}
                 },
                 "ttl": {
-                    "N": getTtl(30)
+                    "N": getTtl(30).valueOf().toString()
                 }
             }
         }));
@@ -31,9 +34,7 @@ module.exports.handler = async (event) => {
         console.error(e);
         return {"statusCode": 500};
     }
-    return {"statusCode": 200, body: JSON.stringify({
-        connectionId
-    })}; // Can the client access this data?
+    return {"statusCode": 200};
 }
 
 const getTtl = (minutes) => {
