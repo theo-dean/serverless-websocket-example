@@ -9,4 +9,5 @@ The FE and BE example work as follow:
  - Run `npm run fe` to run the example FE.
  - Click connect.
  - Once the Websocket connection has successfully connected, copy the RequestId.
- - Run the following command (with the RequestId from above replacing the prop) to simulate the BE response: `npm run start -- REQUEST_ID`
+ - Run the following command (with the RequestId from above replacing the prop) to simulate the BE response: `npm run be -- REQUEST_ID`
+   *note: You may need to adjust the BE NPM script to reflect you desired AWS profile.*

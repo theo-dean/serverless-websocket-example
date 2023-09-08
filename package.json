@@ -4,7 +4,7 @@
   "description": "An example Serverless Application using Websockets",
   "main": "index.js",
   "scripts": {
-    "start": "export AWS_PROFILE=sandbox;node exampleBE.ts",
+    "be": "export AWS_PROFILE=sandbox;node exampleBE.ts",
     "fe": "open exampleFE.html"
   },
   "author": "TD",
