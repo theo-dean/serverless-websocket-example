@@ -45,7 +45,6 @@ functions:
       - stream:
           type: dynamodb
           arn: arn:aws:dynamodb:eu-west-1:255469446966:table/tdean-serverless-websockets-example-ConnectionsTable/stream/2023-07-26T09:17:15.543
-  # Unfortunately, there is no way to generate this stream ^^^ natively in Serverless. This will create some issues on the initial deployment of this stack.
 
 resources:
   Resources:
