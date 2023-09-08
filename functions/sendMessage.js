@@ -20,9 +20,6 @@ module.exports.handler = async (event) => {
     } catch (err) {
         console.error("Dynamo Get Error", err)
     }
-    //const data = event.Records[0].dynamodb;
-    //console.log(conId);
-    //console.log(data);
 
     try {
     await client.send(new apiGatewayClient.PostToConnectionCommand({
