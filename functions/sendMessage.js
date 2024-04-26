@@ -1,14 +1,21 @@
 const apiGatewayClient = require("@aws-sdk/client-apigatewaymanagementapi");
 const dynamodb = require("@aws-sdk/client-dynamodb");
 
-const dynamoClient = new dynamodb.DynamoDBClient({ region: "eu-west-1"});
+const CONNECTIONS_TABLE_NAME = process.env.CONNECTIONS_TABLE_NAME;
+const WEBSOCKET_API_ENDPOINT = process.env.WEBSOCKET_ENDPOINT;
+
+const dynamoClient = new dynamodb.DynamoDBClient({});
 
 module.exports.handler = async (event) => {
+    console.log(JSON.stringify(event))
     const requestId = event.Records[0].dynamodb.Keys.requestId.S;
+    const domainName = event.requestContext.domainName;
+    const stage = event.requestContext.stage;
+    console.log(JSON.stringify({requestId, domainName, stage}))
 
-    const client = new apiGatewayClient.ApiGatewayManagementApiClient({endpoint: "https://2izayxe4sh.execute-api.eu-west-1.amazonaws.com/test"});
+    const client = new apiGatewayClient.ApiGatewayManagementApiClient({endpoint: WEBSOCKET_API_ENDPOINT});
     const dynamoGetInput = {
-        TableName: "tdean-serverless-websockets-example-ConnectionsTable",
+        TableName: CONNECTIONS_TABLE_NAME,
         Key: {
             "requestId": {S: requestId}
         }

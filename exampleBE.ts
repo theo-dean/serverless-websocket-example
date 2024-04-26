@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+const cry = require("crypto");
 const dynamodb = require("@aws-sdk/client-dynamodb");
 var WebSocketClient = require('websocket').client;
 
@@ -10,11 +10,11 @@ if (!requestId) throw Error("Invalid Request ID: "+requestId);
 
 const main = async (requestId) => {
     for (var i = 0; i <= 10; i++){
-        const randomInt = crypto.randomInt(200);
+        const randomInt = cry.randomInt(200);
         const product = {productCode: randomInt, blah:"blah"}
-        await sleep(crypto.randomInt(1000, 3000));
+        await sleep(cry.randomInt(1000, 3000));
         const input = {
-            TableName: "tdean-serverless-websockets-example-ConnectionsTable",
+            TableName: "serverless-websockets-example-connections-table-test",
             Key: {
                 requestId: {S: requestId}
             },

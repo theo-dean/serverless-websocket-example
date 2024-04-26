@@ -1,6 +1,8 @@
 const dynamodb = require("@aws-sdk/client-dynamodb");
 
-const client = new dynamodb.DynamoDBClient({region: "eu-west-1"});
+const CONNECTIONS_TABLE_NAME = process.env.CONNECTIONS_TABLE_NAME;
+
+const client = new dynamodb.DynamoDBClient({});
 
 module.exports.handler = async (event) => {
     const connectionId = event.requestContext.connectionId;
@@ -14,7 +16,7 @@ module.exports.handler = async (event) => {
         if (!requestId) throw new Error("Invalid RequestId", requestId);
         
         await client.send(new dynamodb.PutItemCommand({
-            TableName: "tdean-serverless-websockets-example-ConnectionsTable",
+            TableName: CONNECTIONS_TABLE_NAME,
             Item: {
                 "requestId": {
                     "S": requestId

@@ -1,4 +1,7 @@
-service: "tdean-serverless-websockets-example"
+service: "serverless-websockets-example"
+
+custom:
+  CONNECTIONS_TABLE_NAME: ${self:service}-connections-table-${sls:stage}
 
 provider:
   name: aws
@@ -8,6 +11,8 @@ provider:
   timeout: 15
   memorySize: 256
   profile: sandbox
+  environment:
+    CONNECTIONS_TABLE_NAME: ${self:custom.CONNECTIONS_TABLE_NAME}
   iam:
     role:
       statements:
@@ -17,7 +22,7 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: arn:aws:dynamodb:eu-west-1:255469446966:table/${self:service}-ConnectionsTable
+          Resource: arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${self:custom.CONNECTIONS_TABLE_NAME}
 
 functions:
   connect:
@@ -33,32 +38,34 @@ functions:
   sendMessage:
     handler: functions/sendMessage.handler
     environment:
-      WEBSOCKETS_API_DOMAIN:
-        Fn::Join:
-          - ''
-          - - Ref: WebsocketsApi
-            - .execute-api.
-            - ${self:provider.region}
-            - .amazonaws.com/
-            - ${self:provider.stage}
+      WEBSOCKET_ENDPOINT: !Join ['', ['https://', !Ref WebsocketsApi, '.execute-api.', !Ref AWS::Region, '.amazonaws.com/', '${sls:stage}']]
     events:
       - stream:
           type: dynamodb
-          arn: arn:aws:dynamodb:eu-west-1:255469446966:table/tdean-serverless-websockets-example-ConnectionsTable/stream/2023-07-26T09:17:15.543
+          arn:
+            Fn::GetAtt:
+              - ConnectionsTable
+              - StreamArn
 
 resources:
   Resources:
-  #I would recommend creating this table manually, followed by the stream above ^^^
-    connectionsTable:
+    WebsocketsApi:
+      Type: AWS::ApiGatewayV2::Api
+      Properties:
+        Name: ${self:service}-${self:provider.stage}-websocket-api
+        ProtocolType: WEBSOCKET
+    ConnectionsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:service}-ConnectionsTable
+        TableName: ${self:custom.CONNECTIONS_TABLE_NAME}
         AttributeDefinitions:
           - AttributeName: requestId
             AttributeType: S 
         KeySchema:
           - AttributeName: requestId
             KeyType: HASH
+        StreamSpecification:
+          StreamViewType: "NEW_IMAGE"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

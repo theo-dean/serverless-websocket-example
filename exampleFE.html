@@ -1,13 +1,13 @@
 <script>
     var startTime;
 
-    const apiGatewayWebsocketAddress = "wss://2izayxe4sh.execute-api.eu-west-1.amazonaws.com/test"
+    const apiGatewayWebsocketAddress = "wss://uoih1u4n3f.execute-api.eu-west-1.amazonaws.com/test"
 
     function connectMe() {
         const requestId = crypto.randomUUID();
         const socket = new WebSocket(`${apiGatewayWebsocketAddress}?requestId=${requestId}`);
         var messageCounter = 0;
-        var currentProducts = []
+        var currentProducts = [];
 
         socket.onopen = (e) => {
             console.log("WebSocket Client Connected");
