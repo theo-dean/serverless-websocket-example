@@ -21,7 +21,10 @@ You can deploy using the following steps:
 3. (Optional) Adjust `serverless.yml` config as necessary.
 4. Run `npm run deploy` to deploy the stack.
 
-
+Once the stack is deployed, the console output should contain the URL of the API.
 #### Use
-
-
+Once the stack is deployed, you can run a test workflow as follows:
+1. Open the exampleFE page in a web browser.
+2. Enter the API URL and click connect.
+3. The Request ID will be shown at the top of the page. Copy the Request ID and run `npm run be {Request ID}`.
+4. The table in the exampleFE page will update as results are streamed through the API.
