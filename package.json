@@ -4,17 +4,15 @@
   "description": "An example Serverless Application using Websockets",
   "main": "index.js",
   "scripts": {
-    "be": "export AWS_PROFILE=sandbox;node exampleBE.ts",
+    "be": "node exampleBE.ts",
     "fe": "open exampleFE.html",
     "deploy": "npx serverless deploy"
   },
   "author": "TD",
   "license": "ISC",
-  "dependencies": {
-    "@aws-sdk/client-apigatewaymanagementapi": "^3.362.0",
-    "@aws-sdk/client-dynamodb": "^3.369.0"
-  },
   "devDependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.362.0",
+    "@aws-sdk/client-dynamodb": "^3.369.0",
     "serverless": "^3.38.0",
     "ts-node": "^10.9.1",
     "websocket": "^1.0.34"

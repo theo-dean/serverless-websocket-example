@@ -3,7 +3,7 @@ const dynamodb = require("@aws-sdk/client-dynamodb");
 var WebSocketClient = require('websocket').client;
 
 var wsc = new WebSocketClient();
-const dynamoClient = new dynamodb.DynamoDBClient({ region: "eu-west-1"});
+const dynamoClient = new dynamodb.DynamoDBClient({});
 
 const requestId = process.argv[2];
 if (!requestId) throw Error("Invalid Request ID: "+requestId);

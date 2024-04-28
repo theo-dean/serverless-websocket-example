@@ -5,12 +5,11 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs18.x
-  region: eu-west-1
+  runtime: nodejs20.x
+  region: eu-west-2
   stage: test
   timeout: 15
   memorySize: 256
-  profile: sandbox
   environment:
     CONNECTIONS_TABLE_NAME: ${self:custom.CONNECTIONS_TABLE_NAME}
   iam:

@@ -1,11 +1,9 @@
 <script>
     var startTime;
 
-    const apiGatewayWebsocketAddress = "wss://uoih1u4n3f.execute-api.eu-west-1.amazonaws.com/test"
-
-    function connectMe() {
+    function connectMe(address) {
         const requestId = crypto.randomUUID();
-        const socket = new WebSocket(`${apiGatewayWebsocketAddress}?requestId=${requestId}`);
+        const socket = new WebSocket(`${address}?requestId=${requestId}`);
         var messageCounter = 0;
         var currentProducts = [];
 
@@ -13,7 +11,7 @@
             console.log("WebSocket Client Connected");
             startTime = new Date();
             document.getElementById("tableDiv").style.display = "block";
-            document.getElementById("connectButton").style.display = "none";
+            document.getElementById("connDiv").style.display = "none";
             document.getElementById("connectText").innerText = `Connected with Request ID: ${requestId}`;
             document.getElementById("connectText").style.backgroundColor = "green";
             document.getElementById("connectText").style.display = "block";
@@ -31,28 +29,66 @@
     }
 
     function addProductToTable(product) {
-        var table = document.getElementById("resultsTable");
-        var row = table.insertRow(-1);
-        var productCell = row.insertCell(0);
-        var received = row.insertCell(1);
+        const table = document.getElementById("resultsTable");
+        const row = table.insertRow(-1);
+        const productCell = row.insertCell(0);
+        const received = row.insertCell(1);
         productCell.innerHTML = product;
         received.innerHTML = ((new Date())-startTime)/1000;
     }
 </script>
+<head>
+    <style>
+        .connectionDiv {
+            text-align: center;
+            padding: 20px;
+        }
 
+        #connectInput, #connectButton {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+            width: 50%;
+        }
+
+        #connectButton {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #resultsTable {
+            width: 80%;
+            margin: 20px auto;
+            font-size: 20px;
+            border-collapse: collapse;
+        }
+
+        #resultsTable th, #resultsTable td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        #resultsTable th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
 <div class="mainDiv">
     <div class="connectionDiv" id="connDiv">
-        <button id="connectButton" onclick="connectMe()"> Connect </button>
-        <h2 id="connectText" style="display: none"> </h2>
-        <a id="connectionInfo"></a>
+        <input type="text" id="connectInput" placeholder="Enter connection string">
+        <button id="connectButton" onclick="connectMe(document.getElementById('connectInput').value)"> Connect </button>
     </div>
+    <h2 id="connectText" style="display: none"> </h2>
     <div class="resultsTableDiv" id="tableDiv" style="display: none;">
         <table id="resultsTable">
             <tr>
                 <th>ProductId</th>
                 <th>Received</th>
             </tr>
-            
         </table>
     </div>
 </div>
